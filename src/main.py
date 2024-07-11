@@ -7,6 +7,33 @@ st.sidebar.title("Navigation")
 page = st.sidebar.selectbox("Go to", ["Backpropagation", "Genetic Algorithm", "PSO", "Comparison"])
 
 if page == "Backpropagation":
+    st.header("Backpropagation Algorithm")
+
+    st.write("""
+    **Features of the Backpropagation Algorithm:**
+
+    1. **Initialization**:
+       - Weights and biases are initialized randomly.
+       - The learning rate and the number of epochs are set as hyperparameters.
+
+    2. **Forward Propagation**:
+       - Inputs are passed through the network to obtain outputs using the sigmoid activation function.
+       - The output of each layer is calculated and used as input for the next layer.
+
+    3. **Error Calculation**:
+       - The error is calculated as the difference between the predicted outputs and the actual XOR outputs.
+       - The Mean Squared Error (MSE) is used as the error metric.
+
+    4. **Backward Propagation**:
+       - The error is propagated back through the network.
+       - The weights and biases are adjusted to minimize the error using the gradient of the error.
+
+    5. **Iteration**:
+       - The process of forward propagation, error calculation, and backward propagation is repeated for a specified number of epochs.
+
+    6. **Result**:
+       - The algorithm returns the final weights and biases, and the corresponding error value.
+    """)
     exec(open("BP.py").read())
 elif page == "Genetic Algorithm":
     exec(open("GA.py").read())
