@@ -1,18 +1,31 @@
 import streamlit as st
 import numpy as np
 import pandas as pd
+import time
+import os
 
-# Sigmoid activation function
+# Activation functions
 def sigmoid(x):
     return 1 / (1 + np.exp(-x))
 
-# Derivative of sigmoid function
 def sigmoid_derivative(x):
     return x * (1 - x)
 
+def relu(x):
+    return np.maximum(0, x)
+
+def relu_derivative(x):
+    return np.where(x > 0, 1, 0)
+
+def tanh(x):
+    return np.tanh(x)
+
+def tanh_derivative(x):
+    return 1 - np.tanh(x) ** 2
+
 # Neural Network class
 class NeuralNetwork:
-    def __init__(self, input_size, hidden_size, output_size):
+    def __init__(self, input_size, hidden_size, output_size, activation_function='sigmoid'):
         self.input_size = input_size
         self.hidden_size = hidden_size
         self.output_size = output_size
@@ -25,9 +38,21 @@ class NeuralNetwork:
         self.bias_hidden = np.random.uniform(-1, 1, (1, self.hidden_size))
         self.bias_output = np.random.uniform(-1, 1, (1, self.output_size))
 
+        # Set activation function
+        self.activation_function = activation_function
+        if activation_function == 'sigmoid':
+            self.activate = sigmoid
+            self.activate_derivative = sigmoid_derivative
+        elif activation_function == 'relu':
+            self.activate = relu
+            self.activate_derivative = relu_derivative
+        elif activation_function == 'tanh':
+            self.activate = tanh
+            self.activate_derivative = tanh_derivative
+
     def forward(self, X):
-        self.hidden = sigmoid(np.dot(X, self.weights_input_hidden) + self.bias_hidden)
-        self.output = sigmoid(np.dot(self.hidden, self.weights_hidden_output) + self.bias_output)
+        self.hidden = self.activate(np.dot(X, self.weights_input_hidden) + self.bias_hidden)
+        self.output = self.activate(np.dot(self.hidden, self.weights_hidden_output) + self.bias_output)
         return self.output
 
     def compute_loss(self, y_true):
@@ -55,6 +80,8 @@ class PSO:
         self.global_best_score = float('inf')
 
     def optimize(self, X, y):
+        start_time = time.time()
+        
         for iteration in range(self.n_iterations):
             for particle in self.particles:
                 # Update neural network weights and biases
@@ -92,24 +119,36 @@ class PSO:
                 
                 # Update position
                 particle.position += particle.velocity
-                
-        return self.global_best_position, self.global_best_score
+        
+        end_time = time.time()
+        runtime = end_time - start_time
+        return self.global_best_position, self.global_best_score, runtime
 
 # Streamlit app
-st.title("Neural Network Training with PSO")
+st.header("PSO Demonstration")
+st.write(" ")
 
-# Initialize neural network and PSO
-st.sidebar.header("PSO Parameters")
-n_particles = st.sidebar.slider("Number of Particles", 10, 100, 30)
-n_iterations = st.sidebar.slider("Number of Iterations", 100, 5000, 1000)
-hidden_size = st.sidebar.slider("Hidden Layer Size", 1, 10, 5)
-input_size = 2
-output_size = 1
-inertia_range = st.sidebar.slider("Inertia Range", min_value=0.0, max_value=2.0, value=(0.01, 0.1), step=0.02)
-inertia_step = st.sidebar.slider("Inertia Step", min_value=0.01, max_value=0.1, value=0.01, step=0.01)
-cognitive_component = st.sidebar.slider("Cognitive Component", 0.1, 3.0, 2.05)
-social_component = st.sidebar.slider("Social Component", 0.1, 3.0, 2.05)
-dim = input_size * hidden_size + hidden_size * output_size + hidden_size + output_size
+# Activation function selection
+
+with st.expander("Adjust Hyperparameters", expanded=True):
+    n_particles = st.slider("Number of Particles", 10, 100, 30)
+    n_iterations = st.slider("Number of Iterations", 100, 5000, 1000)
+    hidden_size = st.slider("Hidden Layer Size", 1, 10, 5)
+    input_size = 2
+    output_size = 1
+
+    use_multiple_inertia = st.checkbox("Use Multiple Inertia Values")
+
+    if use_multiple_inertia:
+        inertia_range = st.slider("Inertia Range", min_value=0.0, max_value=2.0, value=(0.01, 0.1), step=0.02)
+        inertia_step = st.slider("Inertia Step", min_value=0.01, max_value=0.1, value=0.01, step=0.01)
+    else:
+        inertia = st.slider("Inertia", min_value=0.0, max_value=2.0, value=0.1, step=0.01)
+
+    cognitive_component = st.slider("Cognitive Component", 0.1, 3.0, 2.05)
+    social_component = st.slider("Social Component", 0.1, 3.0, 2.05)
+    activation_function = st.selectbox("Choose Activation Function", ["sigmoid", "relu", "tanh"])
+    dim = input_size * hidden_size + hidden_size * output_size + hidden_size + output_size
 
 # XOR dataset
 X = np.array([[0, 0], [0, 1], [1, 0], [1, 1]])
@@ -117,14 +156,33 @@ y = np.array([[0], [1], [1], [0]])
 
 results = []
 
-nn = NeuralNetwork(input_size, hidden_size, output_size)
+nn = NeuralNetwork(input_size, hidden_size, output_size, activation_function)
 
-# Iterate over the inertia values
-if st.sidebar.button("Optimize Neural Network"):
+# Streamlit app
+if st.button("Optimize Neural Network"):
     with st.spinner('Computing...'):
-        for inertia in np.arange(inertia_range[0], inertia_range[1] + inertia_step, inertia_step):
+        if use_multiple_inertia:
+            for inertia in np.arange(inertia_range[0], inertia_range[1] + inertia_step, inertia_step):
+                pso = PSO(n_particles, dim, n_iterations, nn, inertia, cognitive_component, social_component)
+                best_weights, best_score, runtime = pso.optimize(X, y)
+                
+                # Set optimized weights to the neural network
+                weights, biases = np.split(best_weights, [input_size * hidden_size + hidden_size * output_size])
+                weight_split = np.split(weights, [input_size * hidden_size])
+                nn.weights_input_hidden = weight_split[0].reshape((input_size, hidden_size))
+                nn.weights_hidden_output = weight_split[1].reshape((hidden_size, output_size))
+                bias_split = np.split(biases, [hidden_size])
+                nn.bias_hidden = bias_split[0].reshape((1, hidden_size))
+                nn.bias_output = bias_split[1].reshape((1, output_size))
+                
+                # Test the neural network
+                output = nn.forward(X)
+                
+                # Store results including predicted values (flattened)
+                results.append((inertia, best_score, best_weights, output.flatten(), runtime))
+        else:
             pso = PSO(n_particles, dim, n_iterations, nn, inertia, cognitive_component, social_component)
-            best_weights, best_score = pso.optimize(X, y)
+            best_weights, best_score, runtime = pso.optimize(X, y)
             
             # Set optimized weights to the neural network
             weights, biases = np.split(best_weights, [input_size * hidden_size + hidden_size * output_size])
@@ -139,37 +197,47 @@ if st.sidebar.button("Optimize Neural Network"):
             output = nn.forward(X)
             
             # Store results including predicted values (flattened)
-            results.append((inertia, best_score, best_weights, output.flatten()))
+            results.append((inertia, best_score, best_weights, output.flatten(), runtime))
 
         # Find the best result
         best_result = min(results, key=lambda x: x[1])
-        best_inertia, best_loss, best_weights, best_output = best_result
+        best_inertia, best_loss, best_weights, best_output, best_runtime = best_result
         
         # Display results table
-        results_df = pd.DataFrame(results, columns=["Inertia", "Loss", "Best Weights", "Predicted Values"])
-        st.write("### Results for Different Inertia Values")
+        results_df = pd.DataFrame(results, columns=["Inertia", "Loss", "Best Weights", "Predicted Values", "Runtime"])
+        st.write("### Results for Different Inertia Values:")
         st.write(results_df.drop(columns=["Best Weights"]))
 
-
         # Display table of actual vs predicted results for the best configuration
-        st.write("### Actual vs Predicted Results (Best Configuration)")
+        st.write("### Actual vs Predicted Results (Best Configuration):")
         result_table = np.hstack((X, y, best_output.reshape(-1, 1)))
         result_df = pd.DataFrame(result_table, columns=["Input 1", "Input 2", "Actual Output", "Predicted Output"])
         st.write(result_df)
         
         # Save results to CSV
-        csv_result_df = pd.DataFrame({
+        results_dir = "results"
+        if not os.path.exists(results_dir):
+            os.makedirs(results_dir)
+        
+        # Save best configuration results
+        csv_best_result_df = pd.DataFrame({
             "Input 1": X[:, 0],
             "Input 2": X[:, 1],
-            "Output": best_output,
-            "Expected Output": y.flatten()
+            "Output": best_output.flatten(),
+            "Expected Output": y.flatten(),
+            "Runtime": [best_runtime] * len(X)
         })
-        csv_result_df.to_csv("best_result_pso.csv", index=False)
-        # st.write("### CSV File Created")
-        # st.write(csv_result_df)
+        csv_best_result_df.to_csv(os.path.join(results_dir, "best_result_pso.csv"), index=False)
+        
+        # Save all configurations results
+        csv_all_results_df = pd.DataFrame({
+            "Inertia": results_df["Inertia"],
+            "Loss": results_df["Loss"],
+            "Runtime": results_df["Runtime"]
+        })
+        csv_all_results_df.to_csv(os.path.join(results_dir, "all_results_pso.csv"), index=False)
         
         # Display best configuration in JSON format
-        # st.write("### Best Configuration")
         route = {
             "config": {
                 "inertia": best_inertia,
@@ -180,6 +248,9 @@ if st.sidebar.button("Optimize Neural Network"):
                 "input_layer_size": input_size,
                 "output_layer_size": output_size,
                 "number_of_iterations": n_iterations,
-                "number_of_particles": n_particles            }
+                "number_of_particles": n_particles,
+                "activation_function": activation_function,
+                "runtime": best_runtime
+            }
         }
         st.expander("Best Configuration", expanded=True).write(route)
