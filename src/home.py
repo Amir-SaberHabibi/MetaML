@@ -153,5 +153,5 @@ with tab6:
 with tab7:
    st.title("About Us")
    st.write(" ")
-   st.write("This application was developed by **Amir Saberhabibi** and **Fatemeh Sarabi** as part of a project for the **Computational Intelligence Course**, under the mentorship of **Dr. Ali Jamalian** at the **University of Guilan, Faculty of Computer Sciences**. Our mission is to harness the power of machine learning models and metaheuristic algorithms, applying them to real-life scenarios to create impactful solutions.")
+   st.write("This application is developed by **Amir Saberhabibi** and **Fatemeh Sarabi** as part of a project for the **Computational Intelligence Course**, under the mentorship of **Dr. Ali Jamalian** at the **University of Guilan, Faculty of Computer Sciences**. Our mission is to harness the power of machine learning models and metaheuristic algorithms, applying them to real-life scenarios to create impactful solutions.")
    #  exec(open("aboutus.py").read())
