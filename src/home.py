@@ -97,7 +97,7 @@ with tab2:
 # GA tab
 with tab3:
     st.write(" ")
-    st.header("Genetic Algorithm for N.N. Optimization")
+    st.header("Genetic Algorithm")
     st.write(" ")
     st.markdown("""
       <div style="border: 0.5px solid #4f4e4e; padding: 10px; border-radius: 5px;">
@@ -152,5 +152,4 @@ with tab6:
 
 with tab7:
    st.title("About Us")
-   #  exec(open("comparison.py").read())
-    
+   #  exec(open("aboutus.py").read())

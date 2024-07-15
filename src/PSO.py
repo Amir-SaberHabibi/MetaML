@@ -4,7 +4,6 @@ import pandas as pd
 import time
 import os
 
-# Activation functions
 def sigmoid(x):
     return 1 / (1 + np.exp(-x))
 
@@ -23,7 +22,6 @@ def tanh(x):
 def tanh_derivative(x):
     return 1 - np.tanh(x) ** 2
 
-# Neural Network class
 class NeuralNetwork:
     def __init__(self, input_size, hidden_size, output_size, activation_function='sigmoid'):
         self.input_size = input_size
@@ -58,7 +56,6 @@ class NeuralNetwork:
     def compute_loss(self, y_true):
         return np.mean((y_true - self.output) ** 2)
 
-# PSO parameters
 class Particle:
     def __init__(self, dim):
         self.position = np.random.uniform(-1, 1, dim)
@@ -84,7 +81,6 @@ class PSO:
         
         for iteration in range(self.n_iterations):
             for particle in self.particles:
-                # Update neural network weights and biases
                 weights, biases = np.split(particle.position, [self.neural_network.input_size * self.neural_network.hidden_size + self.neural_network.hidden_size * self.neural_network.output_size])
                 weight_split = np.split(weights, [self.neural_network.input_size * self.neural_network.hidden_size])
                 self.neural_network.weights_input_hidden = weight_split[0].reshape((self.neural_network.input_size, self.neural_network.hidden_size))
@@ -93,42 +89,35 @@ class PSO:
                 self.neural_network.bias_hidden = bias_split[0].reshape((1, self.neural_network.hidden_size))
                 self.neural_network.bias_output = bias_split[1].reshape((1, self.neural_network.output_size))
                 
-                # Forward pass
                 output = self.neural_network.forward(X)
                 
-                # Compute loss
                 loss = self.neural_network.compute_loss(y)
                 
-                # Update particle's best position
                 if loss < particle.best_score:
                     particle.best_score = loss
                     particle.best_position = particle.position.copy()
                     
-                # Update global best position
                 if loss < self.global_best_score:
                     self.global_best_score = loss
                     self.global_best_position = particle.position.copy()
                     
             for particle in self.particles:
-                # Update velocity
                 r1, r2 = np.random.rand(2)
                 
                 particle.velocity = (self.inertia * particle.velocity + 
                                      self.cognitive_component * r1 * (particle.best_position - particle.position) +
                                      self.social_component * r2 * (self.global_best_position - particle.position))
                 
-                # Update position
                 particle.position += particle.velocity
         
         end_time = time.time()
         runtime = end_time - start_time
         return self.global_best_position, self.global_best_score, runtime
 
-# Streamlit app
-st.header("PSO Demonstration")
+st.title("N.N Demonstration to solve XOR")
 st.write(" ")
-
-# Activation function selection
+st.write("In this section, you can use the **Particle Swarm Optimization Algorithm**, in order to solve the **XOR problem**, while training a **Neural Network!**")
+st.write("You can adjust the hyperparameters of the algorithm for your best fit, using the **toolbox** below:")
 
 with st.expander("Adjust Hyperparameters", expanded=True):
     n_particles = st.slider("Number of Particles", 10, 100, 30)
@@ -150,7 +139,6 @@ with st.expander("Adjust Hyperparameters", expanded=True):
     activation_function = st.selectbox("Choose Activation Function", ["sigmoid", "relu", "tanh"])
     dim = input_size * hidden_size + hidden_size * output_size + hidden_size + output_size
 
-# XOR dataset
 X = np.array([[0, 0], [0, 1], [1, 0], [1, 1]])
 y = np.array([[0], [1], [1], [0]])
 
@@ -158,7 +146,6 @@ results = []
 
 nn = NeuralNetwork(input_size, hidden_size, output_size, activation_function)
 
-# Streamlit app
 if st.button("Optimize Neural Network"):
     with st.spinner('Computing...'):
         if use_multiple_inertia:
@@ -166,7 +153,6 @@ if st.button("Optimize Neural Network"):
                 pso = PSO(n_particles, dim, n_iterations, nn, inertia, cognitive_component, social_component)
                 best_weights, best_score, runtime = pso.optimize(X, y)
                 
-                # Set optimized weights to the neural network
                 weights, biases = np.split(best_weights, [input_size * hidden_size + hidden_size * output_size])
                 weight_split = np.split(weights, [input_size * hidden_size])
                 nn.weights_input_hidden = weight_split[0].reshape((input_size, hidden_size))
@@ -175,16 +161,13 @@ if st.button("Optimize Neural Network"):
                 nn.bias_hidden = bias_split[0].reshape((1, hidden_size))
                 nn.bias_output = bias_split[1].reshape((1, output_size))
                 
-                # Test the neural network
                 output = nn.forward(X)
                 
-                # Store results including predicted values (flattened)
                 results.append((inertia, best_score, best_weights, output.flatten(), runtime))
         else:
             pso = PSO(n_particles, dim, n_iterations, nn, inertia, cognitive_component, social_component)
             best_weights, best_score, runtime = pso.optimize(X, y)
             
-            # Set optimized weights to the neural network
             weights, biases = np.split(best_weights, [input_size * hidden_size + hidden_size * output_size])
             weight_split = np.split(weights, [input_size * hidden_size])
             nn.weights_input_hidden = weight_split[0].reshape((input_size, hidden_size))
@@ -193,33 +176,26 @@ if st.button("Optimize Neural Network"):
             nn.bias_hidden = bias_split[0].reshape((1, hidden_size))
             nn.bias_output = bias_split[1].reshape((1, output_size))
             
-            # Test the neural network
             output = nn.forward(X)
             
-            # Store results including predicted values (flattened)
             results.append((inertia, best_score, best_weights, output.flatten(), runtime))
 
-        # Find the best result
         best_result = min(results, key=lambda x: x[1])
         best_inertia, best_loss, best_weights, best_output, best_runtime = best_result
         
-        # Display results table
         results_df = pd.DataFrame(results, columns=["Inertia", "Loss", "Best Weights", "Predicted Values", "Runtime"])
         st.write("### Results for Different Inertia Values:")
         st.write(results_df.drop(columns=["Best Weights"]))
 
-        # Display table of actual vs predicted results for the best configuration
         st.write("### Actual vs Predicted Results (Best Configuration):")
         result_table = np.hstack((X, y, best_output.reshape(-1, 1)))
         result_df = pd.DataFrame(result_table, columns=["Input 1", "Input 2", "Actual Output", "Predicted Output"])
         st.write(result_df)
         
-        # Save results to CSV
         results_dir = "results"
         if not os.path.exists(results_dir):
             os.makedirs(results_dir)
         
-        # Save best configuration results
         csv_best_result_df = pd.DataFrame({
             "Input 1": X[:, 0],
             "Input 2": X[:, 1],
@@ -229,7 +205,6 @@ if st.button("Optimize Neural Network"):
         })
         csv_best_result_df.to_csv(os.path.join(results_dir, "best_result_pso.csv"), index=False)
         
-        # Save all configurations results
         csv_all_results_df = pd.DataFrame({
             "Inertia": results_df["Inertia"],
             "Loss": results_df["Loss"],
@@ -237,8 +212,7 @@ if st.button("Optimize Neural Network"):
         })
         csv_all_results_df.to_csv(os.path.join(results_dir, "all_results_pso.csv"), index=False)
         
-        # Display best configuration in JSON format
-        route = {
+        config = {
             "config": {
                 "inertia": best_inertia,
                 "loss": best_loss,
@@ -253,4 +227,4 @@ if st.button("Optimize Neural Network"):
                 "runtime": best_runtime
             }
         }
-        st.expander("Best Configuration", expanded=True).write(route)
+        st.expander("Best Configuration", expanded=True).write(config)

@@ -5,7 +5,6 @@ import random
 import os
 import time
 
-# Activation functions
 def sigmoid(x):
     return 1 / (1 + np.exp(-x))
 
@@ -15,17 +14,14 @@ def relu(x):
 def tanh(x):
     return np.tanh(x)
 
-# Function to calculate Mean Squared Error
 def calculate_mse(actual, predicted):
     squared_errors = [(a - p) ** 2 for a, p in zip(actual, predicted)]
     mse = np.mean(squared_errors)  # Calculate mean of squared errors
     return mse
 
-# XOR inputs and outputs
 inputs = np.array([[0, 0], [0, 1], [1, 0], [1, 1]])
 outputs = np.array([[0], [1], [1], [0]])
 
-# Evaluate the neural network with given weights and biases
 def evaluate_network(chromosome, activation_function):
     w1, w2, w3, b = chromosome
     total_error = 0
@@ -39,16 +35,13 @@ def evaluate_network(chromosome, activation_function):
     mse = calculate_mse(outputs.flatten(), predictions)
     return mse, predictions
 
-# Genetic Algorithm Parameters
 population_size = 100
 generations = 1000
 mutation_rate = 0.01
 
-# Initialize the population
 def initialize_population(size):
     return [np.random.rand(4) for _ in range(size)]
 
-# Selection: Tournament Selection
 def select(population, fitnesses):
     selected = []
     for _ in range(len(population)):
@@ -59,21 +52,18 @@ def select(population, fitnesses):
             selected.append(population[j])
     return selected
 
-# Crossover: Single-point crossover
 def crossover(parent1, parent2, crossover_rate):
     if random.random() < crossover_rate:
         point = random.randint(1, len(parent1) - 1)
         return np.concatenate((parent1[:point], parent2[point:]))
     return parent1
 
-# Mutation: Randomly mutate genes
 def mutate(chromosome):
     for i in range(len(chromosome)):
         if random.random() < mutation_rate:
             chromosome[i] += np.random.normal()
     return chromosome
 
-# Main Genetic Algorithm loop
 def genetic_algorithm(crossover_rate, activation_function):
     population = initialize_population(population_size)
     best_chromosome = None
@@ -83,22 +73,18 @@ def genetic_algorithm(crossover_rate, activation_function):
     for generation in range(generations):
         fitnesses = [evaluate_network(chromosome, activation_function)[0] for chromosome in population]
 
-        # Find the best solution in the current population
         for i in range(len(population)):
             if fitnesses[i] < best_fitness:
                 best_fitness = fitnesses[i]
                 best_chromosome = population[i]
 
-        # Store results
         for chromosome, fitness in zip(population, fitnesses):
             _, predictions = evaluate_network(chromosome, activation_function)
             runtime = time.time() - start_time
             results.append((generation, fitness, chromosome, predictions, runtime))
 
-        # Selection
         population = select(population, fitnesses)
 
-        # Crossover and Mutation
         new_population = []
         for i in range(0, len(population), 2):
             parent1 = population[i]
@@ -111,10 +97,12 @@ def genetic_algorithm(crossover_rate, activation_function):
 
     return best_chromosome, best_fitness, results
 
-st.title("Genetic Algorithm Neural Network XOR Solution")
+st.title("N.N Demonstration to solve XOR")
+st.write(" ")
+st.write("In this section, you can use the **Genetic Algorithm**, in order to solve the **XOR problem**, while training a **Neural Network!**")
+st.write("You can adjust the hyperparameters of the algorithm for your best fit, using the **toolbox** below:")
 
 
-# GA Parameters input
 with st.expander("Adjust Hyperparameters", expanded=True):
     population_size = st.slider("Population Size", min_value=10, max_value=200, value=100, step=10)
     generations = st.slider("Number of Generations", min_value=100, max_value=5000, value=1000, step=100)
@@ -126,7 +114,6 @@ with st.expander("Adjust Hyperparameters", expanded=True):
         crossover_step = st.slider("Crossover Step", min_value=0.01, max_value=0.1, value=0.1, step=0.01)
     else:
         crossover_rate = st.slider("Crossover Rate", min_value=0.0, max_value=1.0, value=0.7, step=0.1)
-    # Activation function selection
     activation_function_name = st.selectbox("Choose Activation Function", ["sigmoid", "relu", "tanh"], key="selection")
     if activation_function_name == "sigmoid":
         activation_function = sigmoid
@@ -148,27 +135,22 @@ if st.button("Optimize Neural Network", key="button"):
             all_results = results
         end_time = time.time()
 
-        # Find the best result
         best_result = min(all_results, key=lambda x: x[1])
         best_generation, best_loss, best_weights, best_output, best_runtime = best_result
 
-        # Display results table
         results_df = pd.DataFrame(all_results, columns=["Generation", "Loss", "Best Weights", "Predicted Values", "Runtime"])
         st.write("### Results for Different Generations:")
         st.write(results_df.drop(columns=["Best Weights"]))
 
-        # Display table of actual vs predicted results for the best configuration
         st.write("### Actual vs Predicted Results (Best Configuration):")
         result_table = np.hstack((inputs, outputs, np.array(best_output).reshape(-1, 1)))
         result_df = pd.DataFrame(result_table, columns=["Input 1", "Input 2", "Actual Output", "Predicted Output"])
         st.write(result_df)
 
-        # Save results to CSV
         results_dir = "results"
         if not os.path.exists(results_dir):
             os.makedirs(results_dir)
 
-        # Save best configuration results
         csv_best_result_df = pd.DataFrame({
             "Input 1": inputs[:, 0],
             "Input 2": inputs[:, 1],
@@ -179,7 +161,6 @@ if st.button("Optimize Neural Network", key="button"):
         })
         csv_best_result_df.to_csv(os.path.join(results_dir, "best_result_ga.csv"), index=False)
 
-        # Save all configurations results
         csv_all_results_df = pd.DataFrame({
             "Generation": results_df["Generation"],
             "Loss": results_df["Loss"],
@@ -187,8 +168,7 @@ if st.button("Optimize Neural Network", key="button"):
         })
         csv_all_results_df.to_csv(os.path.join(results_dir, "all_results_ga.csv"), index=False)
 
-        # Display best configuration in JSON format
-        route = {
+        config = {
             "config": {
                 "generation": best_generation,
                 "loss": best_loss,
@@ -199,4 +179,4 @@ if st.button("Optimize Neural Network", key="button"):
                 "runtime": best_runtime
             }
         }
-        st.expander("Best Configuration", expanded=True).write(route)
+        st.expander("Best Configuration", expanded=True).write(config)

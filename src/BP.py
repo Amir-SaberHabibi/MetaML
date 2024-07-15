@@ -5,7 +5,6 @@ import plotly.express as px
 import time
 import os
 
-# Activation functions
 def sigmoid(x):
     return 1 / (1 + np.exp(-x))
 
@@ -24,20 +23,19 @@ def relu(x):
 def relu_derivative(x):
     return np.where(x > 0, 1, 0)
 
-# Function to calculate Mean Squared Error
 def calculate_mse(actual, predicted):
     squared_errors = [(a - p) ** 2 for a, p in zip(actual, predicted)]
     mse = np.mean(squared_errors)
     return mse
 
-# XOR inputs and outputs
 inputs = np.array([[0, 0], [0, 1], [1, 0], [1, 1]])
 outputs = np.array([[0], [1], [1], [0]])
 
-st.title("Backpropagation - XOR")
+st.title("N.N Demonstration to solve XOR")
 st.write(" ")
+st.write("In this section, you can use the **Backpropagation Algorithm**, in order to solve the **XOR problem**, while training a **Neural Network!**")
+st.write("You can adjust the hyperparameters of the algorithm for your best fit, using the **toolbox** below:")
 
-# Hyperparameter input using expanders
 with st.expander("Adjust Hyperparameters", expanded=True):
     use_single_lr = st.checkbox("Use a single learning rate instead of a range")
     
@@ -50,7 +48,6 @@ with st.expander("Adjust Hyperparameters", expanded=True):
     epochs = st.slider("Number of Epochs", min_value=1000, max_value=20000, value=10000, step=1000)
     activation_function = st.selectbox("Activation Function", ("Sigmoid", "Tanh", "ReLU"))
 
-# Select activation function
 if activation_function == "Sigmoid":
     activation_func = sigmoid
     activation_derivative_func = sigmoid_derivative
@@ -89,15 +86,15 @@ if st.button("Compute"):
                     final_output_input = np.dot(hidden_layer_output, weights_hidden_output) + bias_output
                     final_output = activation_func(final_output_input)
 
-                    # Calculate Error
+                    # calculate error
                     error = outputs[i] - final_output
 
-                    # Backward Propagation
+                    # backward propagation
                     d_final_output = error * activation_derivative_func(final_output)
                     error_hidden_layer = d_final_output.dot(weights_hidden_output.T)
                     d_hidden_layer = error_hidden_layer * activation_derivative_func(hidden_layer_output)
 
-                    # Update Weights and Biases
+                    # update weights and biases
                     weights_hidden_output += hidden_layer_output.T.dot(d_final_output) * lr
                     weights_input_hidden += np.outer(inputs[i], d_hidden_layer) * lr
                     bias_output += np.sum(d_final_output, axis=0, keepdims=True) * lr
@@ -105,11 +102,9 @@ if st.button("Compute"):
 
                     epoch_predictions.append(final_output[0, 0])
 
-                # Calculate mean squared error for the epoch using the provided function
                 mse = calculate_mse(outputs, epoch_predictions)
                 mse_data.append([epoch, mse])
 
-            # Store results
             final_outputs = []
             for i in range(len(inputs)):
                 hidden_layer_input = np.dot(inputs[i], weights_input_hidden) + bias_hidden
@@ -120,31 +115,24 @@ if st.button("Compute"):
 
             runtime = time.time() - start_time
 
-            # Record results
             results.append((lr, mse_data[-1][1], weights_input_hidden, final_outputs, runtime))
 
-        # Find best result
         best_result = min(results, key=lambda x: x[1])
         best_lr, best_mse, best_weights, best_output, best_runtime = best_result
 
-        # Display results table
         results_df = pd.DataFrame(results, columns=["Learning Rate", "MSE", "Best Weights", "Predicted Values", "Runtime"])
         st.write("### Results for Different Learning Rates:")
         st.dataframe(results_df.drop(columns=["Best Weights"]))
 
-        # Display table of actual vs predicted results for the best configuration
         st.write("### Actual vs Predicted Results (Best Configuration):")
         result_table = np.hstack((inputs, outputs, np.array(best_output).reshape(-1, 1)))
         result_df = pd.DataFrame(result_table, columns=["Input 1", "Input 2", "Actual Output", "Predicted Output"])
         st.dataframe(result_df)
 
-
-        # Save results to CSV
         results_dir = "results"
         if not os.path.exists(results_dir):
             os.makedirs(results_dir)
 
-        # Save best configuration results
         csv_best_result_df = pd.DataFrame({
             "Input 1": inputs[:, 0],
             "Input 2": inputs[:, 1],
@@ -154,7 +142,6 @@ if st.button("Compute"):
         })
         csv_best_result_df.to_csv(os.path.join(results_dir, "best_result_bp.csv"), index=False)
 
-        # Save all configurations results
         csv_all_results_df = pd.DataFrame({
             "Learning Rate": results_df["Learning Rate"],
             "MSE": results_df["MSE"],
@@ -162,8 +149,7 @@ if st.button("Compute"):
         })
         csv_all_results_df.to_csv(os.path.join(results_dir, "all_results_bp.csv"), index=False)
 
-        # Display best configuration in JSON format
-        route = {
+        config = {
             "config": {
                 "learning_rate": best_lr,
                 "error": best_mse,
@@ -173,4 +159,4 @@ if st.button("Compute"):
                 "runtime": best_runtime
             }
         }
-        st.expander("Best Configuration", expanded=True).write(route)
+        st.expander("Best Configuration", expanded=True).write(config)
