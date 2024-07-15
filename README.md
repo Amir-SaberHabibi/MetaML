@@ -1,4 +1,10 @@
+# Neural Network Training and Comparison App
+
 ![Project Logo](src/images/logo.png)
+
+![Python](https://img.shields.io/badge/Python-3.8%2B-blue)
+![Streamlit](https://img.shields.io/badge/Streamlit-0.86%2B-brightgreen)
+![License](https://img.shields.io/badge/License-MIT-green)
 
 This project is designed to train neural networks using different optimization algorithms (Backpropagation, Genetic Algorithm, and Particle Swarm Optimization) and compare their results. The app provides an interface space to experiment with these algorithms and visualize their performance.
 
@@ -10,7 +16,6 @@ The project consists of the following key components:
 - **Comparison Module**: Compares the performance of the different algorithms based on predefined metrics and generates visualizations.
 - **Data Analyzer Chatbot**: Utilizes the power of Language Models to analyze the performance of different algorithms (PSO, BP, GA) and provide insights through a chatbot interface.
 - **Resources**: Includes data files for storing results in CSV format.
-
 
 ## How to Run the App
 
