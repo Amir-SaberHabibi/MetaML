@@ -5,10 +5,10 @@ st.set_page_config(page_title="MetaML",
                    page_icon=":car:",
                    layout="centered")
 
-with open(r"C:\Users\L5\OneDrive\Documents\GitHub\MetaML\src\ui\sidebar.md", "r") as sidebar_file:
+with open("/mount/src/metaml/src/ui/sidebar.md", "r") as sidebar_file:
     sidebar_content = sidebar_file.read()
 
-with open(r"C:\Users\L5\OneDrive\Documents\GitHub\MetaML\src\ui\styles.md", "r") as styles_file:
+with open("/mount/src/metaml/src/ui/styles.md", "r") as styles_file:
     styles_content = styles_file.read()
 
 st.sidebar.markdown(sidebar_content)
