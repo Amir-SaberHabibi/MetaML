@@ -1,3 +1,4 @@
+
 ![Project Logo](src/images/logo.png)
 
 ![Python](https://img.shields.io/badge/Python-3.8%2B-blue)
@@ -10,10 +11,10 @@ This project is designed to train neural networks using different optimization a
 
 The project consists of the following key components:
 
-- **Training Algorithms**: Implements Backpropagation, Genetic Algorithm, and Particle Swarm Optimization for training neural networks.
-- **Comparison Module**: Compares the performance of the different algorithms based on predefined metrics and generates visualizations.
-- **Data Analyzer Chatbot**: Utilizes the power of Language Models to analyze the performance of different algorithms (PSO, BP, GA) and provide insights through a chatbot interface.
-- **Resources**: Includes data files for storing results in CSV format.
+- **Training Algorithms**: Implements **Backpropagation, Genetic Algorithm, and Particle Swarm Optimization** for training neural networks.
+- **Comparison Module**: Compares the **performance** of the different algorithms based on predefined metrics and generates visualizations.
+- **Data Analyzer Chatbot**: Utilizes the power of **Llama3 large language model** to analyze the performance of different algorithms (PSO, BP, GA) and provide insights through a chatbot interface.
+- **Resources**: Includes **data files** for storing results in CSV format.
 
 ## How to Run the App
 
