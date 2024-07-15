@@ -70,7 +70,7 @@ with tab1:
     Our algorithms are designed to enhance the efficiency and performance of your machine learning tasks through innovative optimization strategies.
     Explore and compare different optimization methods to find the best fit for your models.
     """)
-   #  exec(open("/mount/src/metaml/src/sidebar.py").read())
+   #  exec(open("sidebar.py").read())
 
 # Backpropagation tab
 with tab2:
@@ -91,7 +91,7 @@ with tab2:
     </div>
     """, unsafe_allow_html=True)
     st.write(" ")
-    exec(open("/mount/src/metaml/src/BP.py").read())
+    exec(open("BP.py").read())
 
 
 # GA tab
@@ -114,7 +114,7 @@ with tab3:
       </div>
       """, unsafe_allow_html=True)
     st.write(" ")
-    exec(open("/mount/src/metaml/src/GA.py").read())
+    exec(open("GA.py").read())
 
 
 # PSO tab
@@ -142,14 +142,14 @@ with tab4:
       </div>
       """, unsafe_allow_html=True)
     st.write(" ")
-    exec(open("/mount/src/metaml/src/PSO.py").read())
+    exec(open("PSO.py").read())
 
 with tab5:
-    exec(open("/mount/src/metaml/src/performance.py").read())
+    exec(open("performance.py").read())
 
 with tab6:
-    exec(open("/mount/src/metaml/src/chat.py").read())
+    exec(open("chat.py").read())
 
 with tab7:
    st.title("About Us")
-   #  exec(open("/mount/src/metaml/src/aboutus.py").read())
+   #  exec(open("aboutus.py").read())
