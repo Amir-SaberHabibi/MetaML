@@ -91,7 +91,7 @@ with tab2:
     </div>
     """, unsafe_allow_html=True)
     st.write(" ")
-    exec(open("BP.py").read())
+    exec(open("/mount/src/metaml/src/BP.py").read())
 
 
 # GA tab
@@ -114,7 +114,7 @@ with tab3:
       </div>
       """, unsafe_allow_html=True)
     st.write(" ")
-    exec(open("GA.py").read())
+    exec(open("/mount/src/metaml/src/GA.py").read())
 
 
 # PSO tab
@@ -142,13 +142,13 @@ with tab4:
       </div>
       """, unsafe_allow_html=True)
     st.write(" ")
-    exec(open("PSO.py").read())
+    exec(open("/mount/src/metaml/src/PSO.py").read())
 
 with tab5:
-    exec(open("performance.py").read())
+    exec(open("/mount/src/metaml/src/performance.py").read())
 
 with tab6:
-    exec(open("chat.py").read())
+    exec(open("/mount/src/metaml/src/chat.py").read())
 
 with tab7:
    st.title("About Us")
