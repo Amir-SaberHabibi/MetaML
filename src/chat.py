@@ -38,13 +38,10 @@ st.write(" ")
 results_dir = "results"
 file_path_pso = os.path.join(results_dir, "best_result_pso.csv")
 df_pso = pd.read_csv(file_path_pso)
-print(df_pso)
 file_path_bp = os.path.join(results_dir, "best_result_bp.csv")
 df_bp = pd.read_csv(file_path_bp)
-print(df_bp)
 file_path_ga = os.path.join(results_dir, "best_result_ga.csv")
 df_ga = pd.read_csv(file_path_ga)
-print(df_ga)
 
 
 # Initialize session state for messages
