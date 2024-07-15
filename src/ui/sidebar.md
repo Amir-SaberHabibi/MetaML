@@ -8,8 +8,8 @@ The project consists of the following key components:
 
 - **Training Algorithms**: Implements Backpropagation, Genetic Algorithm, and Particle Swarm Optimization for training neural networks.
 - **Comparison Module**: Compares the performance of the different algorithms based on predefined metrics and generates visualizations.
-- **Streamlit App**: Provides an interactive interface for users to select algorithms, upload datasets, set parameters, and view results.
-- **Resources**: Includes data files for storing results and logos for the app interface.
+- **Data Analyzer Chatbot**: Utilizes the power of `Llama3` to analyze the performance of different algorithms (PSO, BP, GA) and provide insights through a chatbot interface.
+- **Resources**: Includes data files for storing results in CSV format.
 
 
 ## How to Run the App
