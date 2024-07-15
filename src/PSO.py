@@ -192,7 +192,7 @@ if st.button("Optimize Neural Network"):
         result_df = pd.DataFrame(result_table, columns=["Input 1", "Input 2", "Actual Output", "Predicted Output"])
         st.write(result_df)
         
-        results_dir = "results"
+        results_dir = "/mount/src/metaml/src/results"
         if not os.path.exists(results_dir):
             os.makedirs(results_dir)
         
