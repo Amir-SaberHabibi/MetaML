@@ -152,4 +152,5 @@ with tab6:
 
 with tab7:
    st.title("About Us")
+   st.write("This application is developed by Amir Saberhabibi and Fatemeh Sarabi, based on a project for Comutational Intelligance course, mentored by Dr. Ali Jamalian at University of Guilan, Faculty of Computer Sciences. Our mission is to put practice the power of machine learning models and metaheuristic algorithms in real life applications. ")
    #  exec(open("aboutus.py").read())
