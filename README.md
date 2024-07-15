@@ -1,6 +1,6 @@
-![Project Logo](images/logo.png)
+![Project Logo](src/images/logo.png)
 
-This project is designed to train neural networks using different optimization algorithms (Backpropagation, Genetic Algorithm, and Particle Swarm Optimization) and compare their results. The app provides a interface space to experiment with these algorithms and visualize their performance.
+This project is designed to train neural networks using different optimization algorithms (Backpropagation, Genetic Algorithm, and Particle Swarm Optimization) and compare their results. The app provides an interface space to experiment with these algorithms and visualize their performance.
 
 ## Project Structure
 
