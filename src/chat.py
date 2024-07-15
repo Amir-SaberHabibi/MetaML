@@ -35,7 +35,7 @@ st.title("Data Analyzer Chatbot")
 st.write(" ")
 
 
-results_dir = "results"
+results_dir = "/mount/src/metaml/src/results"
 file_path_pso = os.path.join(results_dir, "best_result_pso.csv")
 df_pso = pd.read_csv(file_path_pso)
 file_path_bp = os.path.join(results_dir, "best_result_bp.csv")
