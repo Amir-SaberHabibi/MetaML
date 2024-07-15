@@ -23,9 +23,9 @@ def main():
     st.write("In this section, you can observe how the algorithms perform after processing. This helps you find the best solution possible for your defined problem!")
 
 
-    bp_path = "results/best_result_bp.csv"
-    pso_path = "results/best_result_pso.csv"
-    ga_path = "results/best_result_ga.csv"
+    bp_path = "/mount/src/metaml/src/results/best_result_bp.csv"
+    pso_path = "/mount/src/metaml/src/results/best_result_pso.csv"
+    ga_path = "/mount/src/metaml/src/results/best_result_ga.csv"
 
     if not os.path.exists(bp_path) or not os.path.exists(pso_path) or not os.path.exists(ga_path):
         st.error("Please run the algorithm components first to generate the results, and then come back.")
