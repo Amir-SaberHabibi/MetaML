@@ -22,18 +22,17 @@ def main():
     st.write(" ")
     st.write("In this section, you can observe how the algorithms perform after processing. This helps you find the best solution possible for your defined problem!")
 
-
     bp_path = "/mount/src/metaml/src/results/best_result_bp.csv"
     pso_path = "/mount/src/metaml/src/results/best_result_pso.csv"
     ga_path = "/mount/src/metaml/src/results/best_result_ga.csv"
 
-    if not os.path.exists(bp_path) or not os.path.exists(pso_path) or not os.path.exists(ga_path):
+    try:
+        bp_results = pd.read_csv(bp_path)
+        pso_results = pd.read_csv(pso_path)
+        ga_results = pd.read_csv(ga_path)
+    except FileNotFoundError as e:
         st.error("Please run the algorithm components first to generate the results, and then come back.")
         return
-
-    bp_results = pd.read_csv(bp_path)
-    pso_results = pd.read_csv(pso_path)
-    ga_results = pd.read_csv(ga_path)
 
     mse_bp = calculate_mse(bp_results)
     mse_pso = calculate_mse(pso_results)
