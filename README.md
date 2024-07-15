@@ -1,5 +1,3 @@
-# Neural Network Training and Comparison App
-
 ![Project Logo](src/images/logo.png)
 
 ![Python](https://img.shields.io/badge/Python-3.8%2B-blue)
