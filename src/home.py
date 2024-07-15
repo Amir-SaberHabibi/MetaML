@@ -5,10 +5,10 @@ st.set_page_config(page_title="MetaML",
                    page_icon=":car:",
                    layout="centered")
 
-with open("/mount/src/metaml/src/ui/sidebar.md", "r") as sidebar_file:
+with open("/mount/src/metaml/src//mount/src/metaml/src/ui/sidebar.md", "r") as sidebar_file:
     sidebar_content = sidebar_file.read()
 
-with open("/mount/src/metaml/src/ui/styles.md", "r") as styles_file:
+with open("/mount/src/metaml/src//mount/src/metaml/src/ui/styles.md", "r") as styles_file:
     styles_content = styles_file.read()
 
 st.sidebar.markdown(sidebar_content)
@@ -70,7 +70,7 @@ with tab1:
     Our algorithms are designed to enhance the efficiency and performance of your machine learning tasks through innovative optimization strategies.
     Explore and compare different optimization methods to find the best fit for your models.
     """)
-   #  exec(open("sidebar.py").read())
+   #  exec(open("/mount/src/metaml/src/sidebar.py").read())
 
 # Backpropagation tab
 with tab2:
@@ -91,7 +91,7 @@ with tab2:
     </div>
     """, unsafe_allow_html=True)
     st.write(" ")
-    exec(open("BP.py").read())
+    exec(open("/mount/src/metaml/src/BP.py").read())
 
 
 # GA tab
@@ -114,7 +114,7 @@ with tab3:
       </div>
       """, unsafe_allow_html=True)
     st.write(" ")
-    exec(open("GA.py").read())
+    exec(open("/mount/src/metaml/src/GA.py").read())
 
 
 # PSO tab
@@ -142,14 +142,14 @@ with tab4:
       </div>
       """, unsafe_allow_html=True)
     st.write(" ")
-    exec(open("PSO.py").read())
+    exec(open("/mount/src/metaml/src/PSO.py").read())
 
 with tab5:
-    exec(open("performance.py").read())
+    exec(open("/mount/src/metaml/src/performance.py").read())
 
 with tab6:
-    exec(open("chat.py").read())
+    exec(open("/mount/src/metaml/src/chat.py").read())
 
 with tab7:
    st.title("About Us")
-   #  exec(open("aboutus.py").read())
+   #  exec(open("/mount/src/metaml/src/aboutus.py").read())
