@@ -1,3 +1,5 @@
 [theme]
-primaryColor = "#ff4c4b" # standard red
-base = "light"
+primaryColor="#73b3b2"
+backgroundColor="#292929"
+secondaryBackgroundColor="#2d2d2d"
+textColor="#c1c1c1"
