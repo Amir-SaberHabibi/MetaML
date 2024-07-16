@@ -2,7 +2,7 @@ import streamlit as st
 
 
 st.set_page_config(page_title="MetaML",
-                   page_icon=":car:",
+                   page_icon="/mount/src/metaml/src/images/icon.png",
                    layout="centered")
 
 with open("/mount/src/metaml/src/ui/sidebar.md", "r") as sidebar_file:
