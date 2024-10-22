@@ -3,7 +3,7 @@ from groq import Groq
 import pandas as pd
 import os
 
-groq_api_key = "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"
+groq_api_key = "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"
 client = Groq(api_key=groq_api_key)
 
 models = ["llama3-70b-8192", "llama3-8b-8192", "gemma2-9b-it", "mixtral-8x7b-32768"]
